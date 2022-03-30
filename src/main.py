@@ -1,8 +1,8 @@
 import time
 
-from shift_code_parser import parse
-from config import config
-from alerts import send_discord_alert
+from .shift_code_parser import parse
+from .config import config
+from .alerts import send_discord_alert
 
 def main():
     while True:

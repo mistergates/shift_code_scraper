@@ -4,7 +4,7 @@ import os
 
 from sys import platform
 from datetime import datetime
-from xmlrpc.client import DateTime
+
 
 if 'win' in platform:
     CACHE_DIR = os.path.join(os.getenv('APPDATA'), 'shift_code_scraper')
@@ -12,9 +12,11 @@ else:
     CACHE_DIR = os.path.join(os.path.expanduser('~'), '.shift_code_scraper')
 CACHE_FILE = os.path.join(CACHE_DIR, 'cache')
 
+
 def _validate_cache_dir():
     if not os.path.exists(CACHE_DIR):
         os.makedirs(CACHE_DIR)
+
 
 class Cache:
 

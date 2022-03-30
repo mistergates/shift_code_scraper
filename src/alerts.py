@@ -1,6 +1,6 @@
 from discord import Webhook, RequestsWebhookAdapter, Embed
 
-from config import config
+from .config import config
 
 WEBHOOK = Webhook.from_url(config['MAIN']['discord_webhook'], adapter=RequestsWebhookAdapter())
 

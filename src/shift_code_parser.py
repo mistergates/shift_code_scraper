@@ -2,8 +2,8 @@ import feedparser
 
 from datetime import datetime, timedelta
 
-from cache import cache
-from config import config
+from .cache import cache
+from .config import config
 
 
 URL = 'https://shift.orcicorn.com/index.xml'
