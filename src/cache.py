@@ -1,27 +1,14 @@
 import json
 import atexit
-import os
 
-from sys import platform
 from datetime import datetime
 
-
-if 'win' in platform:
-    CACHE_DIR = os.path.join(os.getenv('APPDATA'), 'shift_code_scraper')
-else:
-    CACHE_DIR = os.path.join(os.path.expanduser('~'), '.shift_code_scraper')
-CACHE_FILE = os.path.join(CACHE_DIR, 'cache')
-
-
-def _validate_cache_dir():
-    if not os.path.exists(CACHE_DIR):
-        os.makedirs(CACHE_DIR)
+from . import CACHE_FILE, logger
 
 
 class Cache:
 
     def __init__(self):
-        _validate_cache_dir()
         atexit.register(self._dump_cache)
         self.cache = self._load_cache()
 
@@ -29,7 +16,9 @@ class Cache:
         return True if key in self.cache else False
 
     def add(self, key, expires):
+        logger.info(f'Adding {key} to cache')
         self.cache[key] = expires
+        self._dump_cache()
 
     def _cleanup(self):
         pass
@@ -39,18 +28,23 @@ class Cache:
         try:
             with open(CACHE_FILE, 'r') as f:
                 c = json.load(f)
-                for k, v in c.items():
-                    cache[k] = datetime.strptime(v, "%m/%d/%Y, %H:%M:%S")
-            return cache
+            for k, v in c.items():
+                cache[k] = datetime.strptime(v, "%m/%d/%Y, %H:%M:%S")
         except:
-            return {}
+            pass
+        logger.info(f'Loading cache {cache}')
+        return cache
 
     def _dump_cache(self):
+        if not self.cache:
+            return
+
         cache = {}
 
         for k, v in self.cache.items():
             cache[k] = v.strftime("%m/%d/%Y, %H:%M:%S")
 
+        logger.info(f'Writing cache {json.dumps(cache, indent=4)}')
         with open(CACHE_FILE, 'w') as f:
             json.dump(cache, f)
 

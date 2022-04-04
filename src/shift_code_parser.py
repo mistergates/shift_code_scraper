@@ -2,6 +2,7 @@ import feedparser
 
 from datetime import datetime, timedelta
 
+from . import logger
 from .cache import cache
 from .config import config
 
@@ -57,4 +58,5 @@ def parse():
         codes.append(code)
         cache.add(code.key, code.expires)
 
+    logger.info(f'Found {len(codes)} codes')
     return codes
